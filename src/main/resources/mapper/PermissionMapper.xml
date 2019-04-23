@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.blackview.admin.dao.PermissionDao">
+  <resultMap id="BaseResultMap" type="cn.com.blackview.admin.domain.Permission">
+    <result column="id" jdbcType="INTEGER" property="id" />
+    <result column="permission" jdbcType="VARCHAR" property="permission" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="parent_id" jdbcType="INTEGER" property="parentId" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="deleted" jdbcType="BIT" property="deleted" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, permission, type, parent_id, description, url, create_time, update_time, deleted
+  </sql>
+  <insert id="insert" parameterType="cn.com.blackview.admin.domain.Permission">
+    insert into auth_permission (permission, type,
+      parent_id, description, url,
+      create_time, update_time, deleted
+      )
+    values ( #{permission,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER},
+      #{parentId,jdbcType=INTEGER}, #{description,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{deleted,jdbcType=BIT}
+      )
+  </insert>
+  <select id="find" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" />
+    from auth_permission
+  </select>
+</mapper>

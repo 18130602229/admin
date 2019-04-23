@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.blackview.admin.dao.OperationLogDao">
+  <resultMap id="BaseResultMap" type="cn.com.blackview.admin.domain.OperationLog">
+    <result column="id" jdbcType="INTEGER" property="id" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="http_method" jdbcType="VARCHAR" property="httpMethod" />
+    <result column="operation_time" jdbcType="TIMESTAMP" property="operationTime" />
+    <result column="succeed" jdbcType="BIT" property="succeed" />
+  </resultMap>
+  <sql id="Base_Column_List">
+		id, user_id, url, http_method, operation_time, succeed
+  </sql>
+  <insert id="insert" parameterType="cn.com.blackview.admin.domain.OperationLog">
+    insert into auth_operation_log ( user_id, url,
+      http_method, operation_time, succeed
+      )
+    values (#{userId,jdbcType=INTEGER}, #{url,jdbcType=VARCHAR},
+      #{httpMethod,jdbcType=VARCHAR}, #{operationTime,jdbcType=TIMESTAMP}, #{succeed,jdbcType=TINYINT}
+      )
+  </insert>
+
+  <select id="find" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/>
+    from auth_operation_log
+  </select>
+</mapper>

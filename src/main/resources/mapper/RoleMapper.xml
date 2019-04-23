@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.blackview.admin.dao.RoleDao">
+  <resultMap id="BaseResultMap" type="cn.com.blackview.admin.domain.Role">
+    <result column="id" jdbcType="INTEGER" property="id" />
+    <result column="role" jdbcType="VARCHAR" property="role" />
+    <result column="role_type" jdbcType="VARCHAR" property="roleType" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="deleted" jdbcType="BIT" property="deleted" />
+  </resultMap>
+  <sql id="base_column_list">
+    id, name, role_type, description, create_time, update_time, deleted
+  </sql>
+  <insert id="insert" parameterType="cn.com.blackview.admin.domain.Role">
+    insert into auth_role (role, role_type,
+      description, create_time, update_time, 
+      deleted)
+    values ( #{role,jdbcType=VARCHAR}, #{roleType,jdbcType=INTEGER},
+      #{description,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{deleted,jdbcType=BIT})
+  </insert>
+  <select id="find" resultMap="BaseResultMap">
+    select <include refid="base_column_list" />
+    from auth_role
+  </select>
+
+  <resultMap id="RoleWithPermission" type="cn.com.blackview.admin.domain.Role" extends="BaseResultMap">
+    <result column="id" jdbcType="INTEGER" property="id" />
+    <result column="role" jdbcType="VARCHAR" property="role" />
+    <result column="role_type" jdbcType="VARCHAR" property="roleType" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="deleted" jdbcType="BIT" property="deleted" />
+    <collection property="permissions" ofType="cn.com.blackview.admin.domain.Permission">
+      <result column="id" jdbcType="INTEGER" property="id" />
+      <result column="permission" jdbcType="VARCHAR" property="permission" />
+      <result column="type" jdbcType="INTEGER" property="type" />
+      <result column="parent_id" jdbcType="INTEGER" property="parentId" />
+      <result column="description" jdbcType="VARCHAR" property="description" />
+      <result column="url" jdbcType="VARCHAR" property="url" />
+    </collection>
+    <!-- 通用查询映射结果 -->
+  </resultMap>
+
+  <select id="selectRoleByIdWithPermission" resultMap="RoleWithPermission" parameterType="java.lang.Long">
+    SELECT
+    r.*,
+    p.id as pid,
+    p.permission,
+    p.type,
+    p.parent_id,
+    p.description as pPermission,
+    p.url
+    from auth_permission p,auth_role r,auth_role_permission rp
+    <where>
+      r.id=#{id} AND
+      r.id=rp.role_id AND
+      p.id=rp.permission_id AND
+      p.deleted=0
+    </where>
+  </select>
+</mapper>

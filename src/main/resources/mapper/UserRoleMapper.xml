@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.blackview.admin.dao.UserRoleDao">
+  <resultMap id="BaseResultMap" type="cn.com.blackview.admin.domain.UserRole">
+    <result column="id" jdbcType="INTEGER" property="id" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="role_id" jdbcType="INTEGER" property="roleId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="base_column_list">
+    id, user_id, role_id, create_time, update_time
+  </sql>
+  <insert id="insert" parameterType="cn.com.blackview.admin.domain.UserRole">
+    insert into auth_user_role (user_id, role_id, create_time, update_time)
+    values (#{userId,jdbcType=INTEGER}, #{roleId,jdbcType=INTEGER},
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <select id="find" resultMap="BaseResultMap">
+    select <include refid="base_column_list"/>
+    from auth_user_role
+  </select>
+</mapper>
